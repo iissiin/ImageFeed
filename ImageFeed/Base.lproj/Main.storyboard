@@ -1,24 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="azJ-Kb-3dy">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--ImageList-->
+        <scene sceneID="ooo-Rt-GXK">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AJD-Ln-XyT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController title="ImageList" id="azJ-Kb-3dy" customClass="ImagesListViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oun-xf-oAj">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="9cU-IS-ym1">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <color key="backgroundColor" red="0.1019607843" green="0.1058823529" blue="0.1333333333" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImagesListCell" rowHeight="247" id="fVW-UN-7qx" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="247"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fVW-UN-7qx" id="ZV7-Ak-0Tc">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="247"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="5U7-GV-BCc">
+                                                    <rect key="frame" x="16" y="4" width="361" height="239"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="16"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gfd-Bg-kVl" userLabel="Like Button">
+                                                    <rect key="frame" x="325" y="12" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="Esq-0c-a3T"/>
+                                                        <constraint firstAttribute="width" constant="44" id="lRN-T5-f7L"/>
+                                                    </constraints>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" image="like_button_on"/>
+                                                </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4hK-n1-53p" userLabel="Data Label">
+                                                    <rect key="frame" x="24" y="219" width="102" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="5U7-GV-BCc" firstAttribute="leading" secondItem="ZV7-Ak-0Tc" secondAttribute="leading" constant="16" id="BDw-V2-FF3"/>
+                                                <constraint firstAttribute="trailing" secondItem="5U7-GV-BCc" secondAttribute="trailing" constant="16" id="EIV-lV-lIC"/>
+                                                <constraint firstItem="5U7-GV-BCc" firstAttribute="top" secondItem="ZV7-Ak-0Tc" secondAttribute="top" constant="4" id="G9Z-eA-nHQ"/>
+                                                <constraint firstItem="5U7-GV-BCc" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="4hK-n1-53p" secondAttribute="trailing" constant="8" id="Xyw-Yr-AUZ"/>
+                                                <constraint firstItem="gfd-Bg-kVl" firstAttribute="trailing" secondItem="5U7-GV-BCc" secondAttribute="trailingMargin" id="ZfU-xY-QDE"/>
+                                                <constraint firstItem="gfd-Bg-kVl" firstAttribute="top" secondItem="5U7-GV-BCc" secondAttribute="topMargin" id="foz-fj-gcu"/>
+                                                <constraint firstAttribute="bottom" secondItem="5U7-GV-BCc" secondAttribute="bottom" constant="4" id="fvh-E9-udx"/>
+                                                <constraint firstItem="4hK-n1-53p" firstAttribute="leading" secondItem="5U7-GV-BCc" secondAttribute="leading" constant="8" id="nl5-Fh-hOy"/>
+                                                <constraint firstItem="5U7-GV-BCc" firstAttribute="bottom" secondItem="4hK-n1-53p" secondAttribute="bottom" constant="8" id="vxg-Hs-yNM"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" name="black"/>
+                                        <connections>
+                                            <outlet property="cellImage" destination="5U7-GV-BCc" id="Ri5-Jz-Ixm"/>
+                                            <outlet property="dateLabel" destination="4hK-n1-53p" id="8Vx-NZ-cv5"/>
+                                            <outlet property="likeButton" destination="gfd-Bg-kVl" id="pnO-oE-1xU"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Wq6-My-EuS"/>
+                        <color key="backgroundColor" red="0.1019607843" green="0.1058823529" blue="0.1333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="9cU-IS-ym1" firstAttribute="top" secondItem="oun-xf-oAj" secondAttribute="top" id="bgO-w1-JU2"/>
+                            <constraint firstAttribute="trailing" secondItem="9cU-IS-ym1" secondAttribute="trailing" id="cv2-0p-Y1T"/>
+                            <constraint firstItem="9cU-IS-ym1" firstAttribute="bottom" secondItem="oun-xf-oAj" secondAttribute="bottom" id="qpE-Cl-PQq"/>
+                            <constraint firstItem="9cU-IS-ym1" firstAttribute="leading" secondItem="oun-xf-oAj" secondAttribute="leading" id="vQJ-mN-VmY"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="9cU-IS-ym1" id="1hi-PR-4iZ"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="60.305343511450381" y="92.957746478873247"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="0" width="1600" height="1059"/>
+        <image name="like_button_on" width="42" height="42"/>
+        <namedColor name="black">
+            <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>
