@@ -1,7 +1,13 @@
 import Foundation
 import UIKit
 
+protocol AuthViewControllerDelegate: AnyObject {
+    func didAuthenticate(_ vc: AuthViewController)
+}
+
 final class AuthViewController: UIViewController {
+    weak var delegate: AuthViewControllerDelegate?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
