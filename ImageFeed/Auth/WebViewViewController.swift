@@ -11,8 +11,8 @@ protocol WebViewViewControllerDelegate: AnyObject {
 final class WebViewViewController: UIViewController {
 
     
-    @IBOutlet weak var webView: WKWebView!
-    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet private var webView: WKWebView!
+    @IBOutlet private var progressView: UIProgressView!
     
     weak var delegate: WebViewViewControllerDelegate?
 
@@ -103,8 +103,10 @@ extension WebViewViewController: WKNavigationDelegate {
     // MARK: http
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let url = URL(string: "https://unsplash.com/oauth/token") else {
+            print("Ошибка")
             return nil
         }
+
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

@@ -2,6 +2,8 @@ import Foundation
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
+    
+    private init() {}
 
     private var task: URLSessionTask?
     private var lastCode: String?
@@ -16,9 +18,11 @@ final class OAuth2Service {
         lastCode = code
 
         guard let request = AuthHelper.shared.makeAuthTokenRequest(with: code) else {
+            print("Ошибка")
             completion(.failure(NetworkError.urlSessionError))
             return
         }
+
 
         task = URLSession.shared.data(for: request) { [weak self] result in
             switch result {

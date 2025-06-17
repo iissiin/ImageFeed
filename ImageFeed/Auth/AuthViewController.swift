@@ -10,29 +10,34 @@ final class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        configureBackButton()
+//        view.backgroundColor = .white
+//        configureBackButton()
         
-        showWebView()
     }
     
-    private func configureBackButton() {
-        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button_white")
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button_white")
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.backBarButtonItem?.tintColor = UIColor(named: "black_Y")
+    @IBAction func didTapLoginButton(_ sender: Any) {
+        performSegue(withIdentifier: "ShowWebView", sender: nil)
     }
     
-    private func showWebView() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let webViewVC = storyboard.instantiateViewController(withIdentifier: "WebViewViewController") as? WebViewViewController else {
-            assertionFailure("Не удалось найти WebViewViewController в storyboard")
-            return
+    
+//    private func configureBackButton() {
+//        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button_white")
+//        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button_white")
+//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+//        navigationItem.backBarButtonItem?.tintColor = UIColor(named: "black_Y")
+//    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowWebView" {
+            guard let webViewVC = segue.destination as? WebViewViewController else {
+                fatalError("Не удалось подготовить WebViewViewController")
+            }
+            webViewVC.delegate = self
+            
+            
         }
-        webViewVC.delegate = self
-        webViewVC.modalPresentationStyle = .fullScreen
-        present(webViewVC, animated: true)
     }
+
 }
 
 // MARK: - WebViewViewControllerDelegate
