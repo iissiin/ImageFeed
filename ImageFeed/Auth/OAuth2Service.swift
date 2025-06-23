@@ -13,38 +13,48 @@ final class OAuth2Service {
         _ code: String,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
-        guard lastCode != code else { return }
+        assert(Thread.isMainThread)
+
+        guard lastCode != code else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+
         task?.cancel()
         lastCode = code
 
         guard let request = AuthHelper.shared.makeAuthTokenRequest(with: code) else {
-            print("Ошибка")
             completion(.failure(NetworkError.urlSessionError))
             return
         }
 
-
         task = URLSession.shared.data(for: request) { [weak self] result in
+            guard let self = self else { return }
+
+            defer {
+                self.task = nil
+                self.lastCode = nil
+            }
+
             switch result {
             case .success(let data):
                 do {
                     let decoder = JSONDecoder()
                     let response = try decoder.decode(OAuthTokenResponseBody.self, from: data)
                     let token = response.accessToken
-                    self?.tokenStorage.token = token
+                    self.tokenStorage.token = token
                     completion(.success(token))
                 } catch {
-                    print("Failed to decode token: \(error)")
-                    print(String(data: data, encoding: .utf8) ?? "<no response body>")
                     completion(.failure(error))
                 }
             case .failure(let error):
-                print("Network error: \(error)")
                 completion(.failure(error))
             }
         }
+
         task?.resume()
     }
+
 }
 
 // MARK: - OAuth2TokenStorage
@@ -85,7 +95,7 @@ final class AuthHelper {
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.httpBody = parameters
-            .map { "\($0.key)=\($0.value)" }
+            .map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
             .joined(separator: "&")
             .data(using: .utf8)
 
