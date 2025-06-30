@@ -48,7 +48,7 @@ final class ProfileImageService {
 
             switch result {
             case .success(let decoded):
-                let urlString = decoded.profileImage.medium
+                let urlString = decoded.profileImage.large
                 self.avatarURL = urlString
 
                 completion(.success(urlString))

@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     private var avatarImageView: UIImageView!
@@ -15,9 +16,8 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         
-        // Подписываемся на обновления профиля
         profileServiceObserver = NotificationCenter.default.addObserver(
-            forName: Notification.Name("ProfileServiceDidUpdate"), // <-- замените на реальное имя уведомления
+            forName: Notification.Name("ProfileServiceDidUpdate"),
             object: nil,
             queue: .main
         ) { [weak self] notification in
@@ -27,7 +27,6 @@ final class ProfileViewController: UIViewController {
             self.loadAvatarForUsername(profile.username)
         }
         
-        // Подписываемся на обновления аватара
         profileImageServiceObserver = NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
             object: nil,
@@ -36,7 +35,6 @@ final class ProfileViewController: UIViewController {
             self?.updateAvatar()
         }
         
-        // Если профиль уже загружен - обновляем UI
         if let profile = ProfileService.shared.profile {
             updateProfileDetails(profile)
             loadAvatarForUsername(profile.username)
@@ -76,29 +74,25 @@ final class ProfileViewController: UIViewController {
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else {
-            // Можно показывать placeholder аватар здесь
-            DispatchQueue.main.async {
-                self.avatarImageView.image = UIImage(named: "avatar_test")
-            }
+            avatarImageView.image = UIImage(named: "Stub")
             return
         }
 
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            guard let self = self,
-                  let data = data,
-                  let image = UIImage(data: data) else {
-                return
-            }
-
-            DispatchQueue.main.async {
-                self.avatarImageView.image = image
-            }
-        }.resume()
+        avatarImageView.kf.indicatorType = .activity
+        avatarImageView.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "Stub"),
+            options: [
+                .processor(RoundCornerImageProcessor(cornerRadius: 35)),
+                .transition(.fade(0.3)),
+                .cacheOriginalImage
+            ]
+        )
     }
+
 
     @objc
     private func didTapLogoutButton() {
-        // Ваш код выхода из аккаунта
     }
 
     // MARK: - UI Setup
@@ -114,7 +108,7 @@ final class ProfileViewController: UIViewController {
 
     private func setupAvatarImageView() {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "avatar_test")
+        imageView.image = UIImage(named: "Stub")
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 35
