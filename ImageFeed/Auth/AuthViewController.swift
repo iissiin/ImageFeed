@@ -54,6 +54,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     }
                 case .failure(let error):
                     print("Ошибка при получении токена: \(error)")
+                    self.showLoginErrorAlert()
                 }
             }
         }
@@ -62,6 +63,17 @@ extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
     }
-
 }
 
+// MARK: - Alert
+extension AuthViewController {
+    func showLoginErrorAlert() {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Ок", style: .default))
+        present(alert, animated: true)
+    }
+}

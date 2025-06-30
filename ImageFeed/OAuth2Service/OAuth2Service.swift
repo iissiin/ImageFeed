@@ -28,7 +28,7 @@ final class OAuth2Service {
             return
         }
 
-        task = URLSession.shared.data(for: request) { [weak self] result in
+        task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             guard let self = self else { return }
 
             defer {
@@ -37,17 +37,13 @@ final class OAuth2Service {
             }
 
             switch result {
-            case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    let response = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    let token = response.accessToken
-                    self.tokenStorage.token = token
-                    completion(.success(token))
-                } catch {
-                    completion(.failure(error))
-                }
+            case .success(let response):
+                let token = response.accessToken
+                self.tokenStorage.token = token
+                self.lastCode = nil
+                completion(.success(token))
             case .failure(let error):
+                print("[OAuth2Service]: Ошибка авторизации")
                 completion(.failure(error))
             }
         }
@@ -60,6 +56,7 @@ final class OAuth2Service {
 // MARK: - OAuth2TokenStorage
 
 final class OAuth2TokenStorage {
+    static let shared = OAuth2TokenStorage() 
     private let tokenKey = "bearerToken"
 
     var token: String? {

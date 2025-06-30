@@ -4,17 +4,19 @@ final class SplashViewController: UIViewController {
     private let ShowAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
 
     private let oauth2Service = OAuth2Service.shared
-    private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let oauth2TokenStorage = OAuth2TokenStorage.shared
+    private let profileService = ProfileService.shared
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if oauth2TokenStorage.token != nil {
-            switchToTabBarController()
+        if let token = oauth2TokenStorage.token {
+            UIBlockingProgressHUD.show()
+            fetchProfile(token)
         } else {
-            // Show Auth Screen
             performSegue(withIdentifier: ShowAuthenticationScreenSegueIdentifier, sender: nil)
         }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -55,17 +57,35 @@ extension SplashViewController: AuthViewControllerDelegate {
             self.fetchOAuthToken(code)
         }
     }
-
-    private func fetchOAuthToken(_ code: String) {
-        oauth2Service.fetchOAuthToken(code) { [weak self] result in
+    
+    private func fetchProfile(_ token: String) {
+        ProfileService.shared.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
+            UIBlockingProgressHUD.dismiss()
+            
             switch result {
-            case .success:
+            case .success(let profile):
                 self.switchToTabBarController()
-            case .failure:
-                // TODO [Sprint 11]
-                break
+            case .failure(let error):
+                print("Ошибка загрузки профиля: \(error)")
             }
         }
     }
+
+
+    private func fetchOAuthToken(_ code: String) {
+        UIBlockingProgressHUD.show()
+        oauth2Service.fetchOAuthToken(code) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let token):
+                self.fetchProfile(token)
+            case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
+                print("Ошибка получения токена: \(error)")
+            }
+        }
+    }
+
 }
