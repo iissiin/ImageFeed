@@ -1,4 +1,5 @@
 import Foundation
+import SwiftKeychainWrapper
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
@@ -56,18 +57,29 @@ final class OAuth2Service {
 // MARK: - OAuth2TokenStorage
 
 final class OAuth2TokenStorage {
-    static let shared = OAuth2TokenStorage() 
+    static let shared = OAuth2TokenStorage()
     private let tokenKey = "bearerToken"
 
     var token: String? {
         get {
-            UserDefaults.standard.string(forKey: tokenKey)
+            KeychainWrapper.standard.string(forKey: tokenKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: tokenKey)
+            if let token = newValue {
+                let success = KeychainWrapper.standard.set(token, forKey: tokenKey)
+                if !success {
+                    print("ошибка")
+                }
+            } else {
+                let removed = KeychainWrapper.standard.removeObject(forKey: tokenKey)
+                if !removed {
+                    print("Ошибка")
+                }
+            }
         }
     }
 }
+
 
 // MARK: - AuthHelper
 
