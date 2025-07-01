@@ -17,7 +17,9 @@ final class OAuth2Service {
         assert(Thread.isMainThread)
 
         guard lastCode != code else {
-            completion(.failure(AuthServiceError.invalidRequest))
+            DispatchQueue.main.async {
+                completion(.failure(AuthServiceError.invalidRequest))
+            }
             return
         }
 
@@ -25,7 +27,9 @@ final class OAuth2Service {
         lastCode = code
 
         guard let request = AuthHelper.shared.makeAuthTokenRequest(with: code) else {
-            completion(.failure(NetworkError.urlSessionError))
+            DispatchQueue.main.async {
+                completion(.failure(NetworkError.urlSessionError))
+            }
             return
         }
 
@@ -46,12 +50,15 @@ final class OAuth2Service {
                 }
             case .failure(let error):
                 print("[OAuth2Service]: Ошибка авторизации")
-                completion(.failure(error))
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
             }
         }
 
         task?.resume()
     }
+
 
 }
 
