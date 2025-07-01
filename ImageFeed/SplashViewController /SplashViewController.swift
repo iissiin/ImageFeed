@@ -6,9 +6,12 @@ final class SplashViewController: UIViewController {
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
+    private var isAuthenticated = false
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        guard !isAuthenticated else { return }
 
         if let token = oauth2TokenStorage.token {
             UIBlockingProgressHUD.show()

@@ -13,7 +13,7 @@
         <!--ImageList-->
         <scene sceneID="ooo-Rt-GXK">
             <objects>
-                <viewController title="ImageList" id="azJ-Kb-3dy" customClass="ImagesListViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImagesListViewController" title="ImageList" useStoryboardIdentifierAsRestorationIdentifier="YES" id="azJ-Kb-3dy" customClass="ImagesListViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oun-xf-oAj">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -94,28 +94,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AJD-Ln-XyT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="987.02290076335873" y="92.957746478873247"/>
-        </scene>
-        <!--Profile-->
-        <scene sceneID="Ifh-5t-V4h">
-            <objects>
-                <viewController title="Profile" id="k3b-Kz-Lex" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="ewR-Yt-Kqd">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="XaK-0F-09d"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="ProfileViewController" id="OhD-qf-WxH"/>
-                    <navigationItem key="navigationItem" id="eiH-fi-Emp"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xny-zn-Zuo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="60" y="788"/>
+            <point key="canvasLocation" x="137" y="254"/>
         </scene>
         <!--Tab Bar View Controller-->
         <scene sceneID="NUl-ph-B8z">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="g97-Q4-u3I" customClass="TabBarViewController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="g97-Q4-u3I" customClass="TabBarViewController" customModule="ImageFeed" customModuleProvider="target" colorLabel="IBBuiltInLabel-Blue" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hJ4-xE-kZM">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -125,14 +109,10 @@
                             <color key="backgroundColor" name="black_Y"/>
                         </tabBarAppearance>
                     </tabBar>
-                    <connections>
-                        <segue destination="azJ-Kb-3dy" kind="relationship" relationship="viewControllers" id="GF6-1Z-qfr"/>
-                        <segue destination="k3b-Kz-Lex" kind="relationship" relationship="viewControllers" id="zmh-CV-H5w"/>
-                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sRb-96-Tym" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1019" y="320"/>
+            <point key="canvasLocation" x="-1245" y="567"/>
         </scene>
         <!--Single Image View Controller-->
         <scene sceneID="M8k-zo-iGl">
@@ -202,7 +182,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ywm-Nl-qIS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3040.4580152671756" y="92.957746478873247"/>
+            <point key="canvasLocation" x="1404" y="254"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="S97-1R-tR5">
@@ -254,7 +234,7 @@
         <!--Web View View Controller-->
         <scene sceneID="cIW-Jw-sSN">
             <objects>
-                <viewController storyboardIdentifier="WebViewViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QKc-UU-nuS" customClass="WebViewViewController" customModule="Image_Feed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QKc-UU-nuS" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Wle-lS-WCy">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -311,7 +291,7 @@
         <!--Auth View Controller-->
         <scene sceneID="PX8-Ej-7yw">
             <objects>
-                <viewController storyboardIdentifier="AuthViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Qvm-3Z-01d" customClass="AuthViewController" customModule="Image_Feed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Qvm-3Z-01d" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lDq-vu-sqh">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -364,7 +344,6 @@
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
-        <image name="ProfileViewController" width="24" height="24"/>
         <image name="auth_screen_logo" width="60" height="60"/>
         <image name="like_button_on" width="42" height="42"/>
         <image name="nav_back_button" width="24" height="24"/>

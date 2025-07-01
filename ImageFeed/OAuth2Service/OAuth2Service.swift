@@ -40,9 +40,10 @@ final class OAuth2Service {
             switch result {
             case .success(let response):
                 let token = response.accessToken
-                self.tokenStorage.token = token
-                self.lastCode = nil
-                completion(.success(token))
+                DispatchQueue.main.async {
+                    self.tokenStorage.token = token
+                    completion(.success(token))
+                }
             case .failure(let error):
                 print("[OAuth2Service]: Ошибка авторизации")
                 completion(.failure(error))
