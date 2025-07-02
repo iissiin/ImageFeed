@@ -6,6 +6,7 @@ final class ProfileService {
     private var lastToken: String?
     
     static let shared = ProfileService()
+    private init() {}
     
     private(set) var profile: Profile?
     
