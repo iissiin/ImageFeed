@@ -1,21 +1,47 @@
-import Foundation
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage?
+    var imageURL: URL?  // Заменяем UIImage на URL
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         
-        guard let image else { return }
-        imageView.image = image
-        imageView.frame.size = image.size
-        rescaleAndCenterImageInScrollView(image: image)
+        loadImage()
+    }
+    
+    private func loadImage() {
+        guard let imageURL = imageURL else { return }
+        
+        activityIndicator.startAnimating()
+        imageView.kf.setImage(with: imageURL) { [weak self] result in
+            guard let self = self else { return }
+            self.activityIndicator.stopAnimating()
+            
+            switch result {
+            case .success(let imageResult):
+                self.imageView.image = imageResult.image
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure(let error):
+                self.showErrorAlert(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(
+            title: "Ошибка",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
     
     @IBAction func didTapBackButton(_ sender: UIButton) {
@@ -23,9 +49,12 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction func didTapShareButton(_ sender: UIButton) {
-        guard let image else {return}
-        let share = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-        present(share, animated: true, completion: nil)
+        guard let image = imageView.image else { return }
+        let share = UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+        present(share, animated: true)
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -44,7 +73,6 @@ final class SingleImageViewController: UIViewController {
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
-    
 }
 
 // MARK: - UIScrollViewDelegate
@@ -53,4 +81,3 @@ extension SingleImageViewController: UIScrollViewDelegate {
         return imageView
     }
 }
-

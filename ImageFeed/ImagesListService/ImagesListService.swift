@@ -20,7 +20,6 @@ final class ImagesListService {
 
     // MARK: - Network
     func fetchPhotosNextPage() {
-        // Если уже идёт загрузка — прерываем
         guard task == nil else { return }
 
         let nextPage = lastLoadedPage + 1
