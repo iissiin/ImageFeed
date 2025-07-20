@@ -2,36 +2,54 @@ import UIKit
 import Kingfisher
 
 final class SingleImageViewController: UIViewController {
-    var imageURL: URL?  // Заменяем UIImage на URL
+    var imageURL: URL?
+    private var hasLoadedImage = false
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-        
-        loadImage()
     }
-    
+        
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if !hasLoadedImage {
+            loadImage()
+            hasLoadedImage = true
+        }
+    }
+
     private func loadImage() {
-        guard let imageURL = imageURL else { return }
+        guard let imageURL = imageURL else {
+                    print("❌ imageURL is nil в loadImage()")
+                    return
+                }
         
         activityIndicator.startAnimating()
+                
         imageView.kf.setImage(with: imageURL) { [weak self] result in
-            guard let self = self else { return }
-            self.activityIndicator.stopAnimating()
-            
-            switch result {
-            case .success(let imageResult):
-                self.imageView.image = imageResult.image
-                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
-            case .failure(let error):
-                self.showErrorAlert(message: error.localizedDescription)
-            }
-        }
+               guard let self = self else { return }
+
+               self.activityIndicator.stopAnimating()
+
+               switch result {
+               case .success(let imageResult):
+                   print("📐 image size: \(imageResult.image.size)")
+                   print("📐 imageView frame: \(self.imageView.frame)")
+                   print("📐 scrollView frame: \(self.scrollView.frame)")
+                   
+                   self.imageView.image = imageResult.image
+                   self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+               case .failure(let error):
+                   self.showErrorAlert(message: error.localizedDescription)
+               }
+           }
     }
     
     private func showErrorAlert(message: String) {

@@ -7,6 +7,7 @@ class ImagesListViewController: UIViewController {
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
     private let imagesListService = ImagesListService.shared
+    private var selectedIndexPath: IndexPath?
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -85,13 +86,14 @@ class ImagesListViewController: UIViewController {
         if segue.identifier == showSingleImageSegueIdentifier {
             guard
                 let viewController = segue.destination as? SingleImageViewController,
-                let indexPath = sender as? IndexPath
+                let indexPath = selectedIndexPath
             else {
-                assertionFailure("Invalid segue destination")
+                assertionFailure("Invalid segue destination or indexPath")
                 return
             }
 
             let photo = photos[indexPath.row]
+            print("🔍 prepare segue: row \(indexPath.row), imageURL: \(photo.largeImageURL)")
             viewController.imageURL = URL(string: photo.largeImageURL)
         }
     }
@@ -100,11 +102,11 @@ class ImagesListViewController: UIViewController {
 // MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+        selectedIndexPath = indexPath
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: nil)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        // Загружаем следующую страницу, когда пользователь доскроллил до последних 3 ячеек
         if indexPath.row >= photos.count - 3 {
             imagesListService.fetchPhotosNextPage()
         }
