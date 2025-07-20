@@ -27,7 +27,6 @@ final class SingleImageViewController: UIViewController {
 
     private func loadImage() {
         guard let imageURL = imageURL else {
-                    print("❌ imageURL is nil в loadImage()")
                     return
                 }
         
@@ -40,9 +39,6 @@ final class SingleImageViewController: UIViewController {
 
                switch result {
                case .success(let imageResult):
-                   print("📐 image size: \(imageResult.image.size)")
-                   print("📐 imageView frame: \(self.imageView.frame)")
-                   print("📐 scrollView frame: \(self.scrollView.frame)")
                    
                    self.imageView.image = imageResult.image
                    self.rescaleAndCenterImageInScrollView(image: imageResult.image)
