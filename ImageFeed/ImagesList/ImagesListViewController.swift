@@ -58,6 +58,7 @@ class ImagesListViewController: UIViewController {
     }
     
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        
         let photo = photos[indexPath.row]
         
         cell.cellImage.kf.indicatorType = .activity
@@ -78,8 +79,7 @@ class ImagesListViewController: UIViewController {
         
         cell.dateLabel.text = photo.createdAt.flatMap { dateFormatter.string(from: $0) } ?? ""
         
-        let likeImage = photo.isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
-        cell.likeButton.setImage(likeImage, for: .normal)
+        cell.setIsLiked(photo.isLiked)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -135,6 +135,68 @@ extension ImagesListViewController: UITableViewDataSource {
         }
         
         configCell(for: imagesListCell, with: indexPath)
+        imagesListCell.delegate = self
+        
         return imagesListCell
     }
 }
+
+// MARK: - ImagesListCellDelegate
+
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+
+        var photo = photos[indexPath.row]
+        photo.isLiked.toggle()
+        photos[indexPath.row] = photo
+
+        cell.setIsLiked(photo.isLiked)
+
+        print("❤️")
+    }
+}
+//extension ImagesListViewController: ImagesListCellDelegate {
+//    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+//        // Получаем indexPath
+//        guard let indexPath = tableView.indexPath(for: cell) else { return }
+//        let photo = photos[indexPath.row]
+//
+//        // Блокируем UI и показываем лоадер
+//        UIBlockingProgressHUD.show()
+//
+//        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+//            DispatchQueue.main.async {
+//                UIBlockingProgressHUD.dismiss()
+//
+//                guard let self = self else { return }
+//
+//                switch result {
+//                case .success:
+//                    // Синхронизируем данные
+//                    self.photos = self.imagesListService.photos
+//
+//                    // Обновляем конкретную ячейку (если она на экране)
+//                    if let updatedCell = self.tableView.cellForRow(at: indexPath) as? ImagesListCell {
+//                        let updatedPhoto = self.photos[indexPath.row]
+//                        updatedCell.setIsLiked(updatedPhoto.isLiked)
+//                    }
+//
+//                case .failure(let error):
+//                    print("❌ Ошибка при смене лайка: \(error.localizedDescription)")
+//
+//                    let alert = UIAlertController(
+//                        title: "Ошибка",
+//                        message: "Не удалось изменить состояние лайка. Попробуйте позже.",
+//                        preferredStyle: .alert
+//                    )
+//                    alert.addAction(UIAlertAction(title: "ОК", style: .default))
+//                    self.present(alert, animated: true)
+//                }
+//            }
+//        }
+//    }
+//}
+
+

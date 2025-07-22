@@ -46,6 +46,9 @@
                                                     </constraints>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="like_button_on"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked:" destination="fVW-UN-7qx" eventType="touchUpInside" id="NlH-re-ZXa"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4hK-n1-53p" userLabel="Data Label">
                                                     <rect key="frame" x="24" y="219" width="102" height="16"/>
@@ -70,7 +73,7 @@
                                         <connections>
                                             <outlet property="cellImage" destination="5U7-GV-BCc" id="Ri5-Jz-Ixm"/>
                                             <outlet property="dateLabel" destination="4hK-n1-53p" id="8Vx-NZ-cv5"/>
-                                            <outlet property="likeButton" destination="gfd-Bg-kVl" id="pnO-oE-1xU"/>
+                                            <outlet property="likeButton" destination="gfd-Bg-kVl" id="kBW-rP-gl2"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
