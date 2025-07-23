@@ -144,59 +144,56 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - ImagesListCellDelegate
 
 
+//extension ImagesListViewController: ImagesListCellDelegate {
+//    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+//        guard let indexPath = tableView.indexPath(for: cell) else { return }
+//
+//        var photo = photos[indexPath.row]
+//        photo.isLiked.toggle()
+//        photos[indexPath.row] = photo
+//
+//        cell.setIsLiked(photo.isLiked)
+//
+//        print("❤️")
+//    }
+//}
+
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
-
+        
+        // 1. Захватываем weak self, чтобы избежать retain cycle
+        UIBlockingProgressHUD.show() // Блокируем UI на время запроса
         var photo = photos[indexPath.row]
-        photo.isLiked.toggle()
-        photos[indexPath.row] = photo
-
-        cell.setIsLiked(photo.isLiked)
-
-        print("❤️")
+        
+        // 2. Отправляем запрос в фоновом потоке (если нужно)
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
+            // 3. Имитируем запрос к API (замени на реальный вызов)
+            let newLikeStatus = !photo.isLiked
+            let success = true // Предположим, что запрос успешен
+            
+            DispatchQueue.main.async {
+                UIBlockingProgressHUD.dismiss() // Разблокируем UI
+                
+                if success {
+                    // 4. Обновляем данные и UI в главном потоке
+                    photo.isLiked = newLikeStatus
+                    self.photos[indexPath.row] = photo
+                    cell.setIsLiked(newLikeStatus)
+                } else {
+                    // Показываем ошибку, если запрос не удался
+                    print("Ошибка при изменении лайка")
+                }
+            }
+        }
     }
 }
-//extension ImagesListViewController: ImagesListCellDelegate {
-//    func imageListCellDidTapLike(_ cell: ImagesListCell) {
-//        // Получаем indexPath
-//        guard let indexPath = tableView.indexPath(for: cell) else { return }
-//        let photo = photos[indexPath.row]
-//
-//        // Блокируем UI и показываем лоадер
-//        UIBlockingProgressHUD.show()
-//
-//        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
-//            DispatchQueue.main.async {
-//                UIBlockingProgressHUD.dismiss()
-//
-//                guard let self = self else { return }
-//
-//                switch result {
-//                case .success:
-//                    // Синхронизируем данные
-//                    self.photos = self.imagesListService.photos
-//
-//                    // Обновляем конкретную ячейку (если она на экране)
-//                    if let updatedCell = self.tableView.cellForRow(at: indexPath) as? ImagesListCell {
-//                        let updatedPhoto = self.photos[indexPath.row]
-//                        updatedCell.setIsLiked(updatedPhoto.isLiked)
-//                    }
-//
-//                case .failure(let error):
-//                    print("❌ Ошибка при смене лайка: \(error.localizedDescription)")
-//
-//                    let alert = UIAlertController(
-//                        title: "Ошибка",
-//                        message: "Не удалось изменить состояние лайка. Попробуйте позже.",
-//                        preferredStyle: .alert
-//                    )
-//                    alert.addAction(UIAlertAction(title: "ОК", style: .default))
-//                    self.present(alert, animated: true)
-//                }
-//            }
-//        }
-//    }
-//}
+
+
+
+
+
 
 
