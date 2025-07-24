@@ -86,7 +86,7 @@ final class SingleImageViewController: UIViewController {
         let hScale = visibleSize.width / imageSize.width
         let vScale = visibleSize.height / imageSize.height
 
-        let scale = max(hScale, vScale) // 💥 Ключевой момент — делаем aspectFill поведение
+        let scale = max(hScale, vScale) 
 
         scrollView.minimumZoomScale = scale
         scrollView.zoomScale = scale

@@ -146,28 +146,23 @@ extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         
-        // 1. Захватываем weak self, чтобы избежать retain cycle
-        UIBlockingProgressHUD.show() // Блокируем UI на время запроса
+        UIBlockingProgressHUD.show()
         var photo = photos[indexPath.row]
         
-        // 2. Отправляем запрос в фоновом потоке (если нужно)
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             
-            // 3. Имитируем запрос к API (замени на реальный вызов)
             let newLikeStatus = !photo.isLiked
-            let success = true // Предположим, что запрос успешен
+            let success = true
             
             DispatchQueue.main.async {
-                UIBlockingProgressHUD.dismiss() // Разблокируем UI
+                UIBlockingProgressHUD.dismiss()
                 
                 if success {
-                    // 4. Обновляем данные и UI в главном потоке
                     photo.isLiked = newLikeStatus
                     self.photos[indexPath.row] = photo
                     cell.setIsLiked(newLikeStatus)
                 } else {
-                    // Показываем ошибку, если запрос не удался
                     print("Ошибка при изменении лайка")
                 }
             }

@@ -7,13 +7,19 @@ final class ImagesListService {
     static let shared = ImagesListService()
     
     private(set) var photos: [Photo] = []
-    
     private var lastLoadedPage = 0
     private var task: URLSessionTask?
 
     private let perPage = 10
     private let session = URLSession.shared
     private let decoder = JSONDecoder()
+    
+    func clean() {
+            photos = []
+            lastLoadedPage = 0
+            task?.cancel()
+            task = nil
+        }
 
     // MARK: - Fetch Photos
     func fetchPhotosNextPage() {

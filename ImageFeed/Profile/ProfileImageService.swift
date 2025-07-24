@@ -10,6 +10,10 @@ final class ProfileImageService {
     private var lastUsername: String?
 
     private(set) var avatarURL: String?
+    
+    func clean() {
+            avatarURL = nil
+    }
 
     func fetchProfileImageURL(
         username: String,
