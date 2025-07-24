@@ -142,22 +142,6 @@ extension ImagesListViewController: UITableViewDataSource {
 }
 
 // MARK: - ImagesListCellDelegate
-
-
-//extension ImagesListViewController: ImagesListCellDelegate {
-//    func imageListCellDidTapLike(_ cell: ImagesListCell) {
-//        guard let indexPath = tableView.indexPath(for: cell) else { return }
-//
-//        var photo = photos[indexPath.row]
-//        photo.isLiked.toggle()
-//        photos[indexPath.row] = photo
-//
-//        cell.setIsLiked(photo.isLiked)
-//
-//        print("❤️")
-//    }
-//}
-
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }

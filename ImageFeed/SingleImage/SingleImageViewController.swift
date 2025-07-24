@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 import Kingfisher
 
 final class SingleImageViewController: UIViewController {
@@ -7,13 +8,14 @@ final class SingleImageViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.delegate = self
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = true
     }
         
     override func viewWillAppear(_ animated: Bool) {
@@ -26,37 +28,41 @@ final class SingleImageViewController: UIViewController {
     }
 
     private func loadImage() {
-        guard let imageURL = imageURL else {
-                    return
-                }
-        
-        activityIndicator.startAnimating()
-                
+        guard let imageURL = imageURL else { return }
+
+        ProgressHUD.animate()
+
         imageView.kf.setImage(with: imageURL) { [weak self] result in
-               guard let self = self else { return }
+            guard let self = self else { return }
 
-               self.activityIndicator.stopAnimating()
+            ProgressHUD.dismiss()
 
-               switch result {
-               case .success(let imageResult):
-                   
-                   self.imageView.image = imageResult.image
-                   self.rescaleAndCenterImageInScrollView(image: imageResult.image)
-               case .failure(let error):
-                   self.showErrorAlert(message: error.localizedDescription)
-               }
-           }
+            switch result {
+            case .success(let imageResult):
+                self.imageView.image = imageResult.image
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure:
+                self.showError()
+            }
+        }
     }
     
-    private func showErrorAlert(message: String) {
+    private func showError() {
         let alert = UIAlertController(
-            title: "Ошибка",
-            message: message,
+            title: "Что-то пошло не так.",
+            message: "Попробовать ещё раз?",
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        alert.addAction(UIAlertAction(title: "Не надо", style: .cancel))
+        
+        alert.addAction(UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.loadImage()
+        })
+        
         present(alert, animated: true)
     }
+
     
     @IBAction func didTapBackButton(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
@@ -72,21 +78,31 @@ final class SingleImageViewController: UIViewController {
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
-        let minZoomScale = scrollView.minimumZoomScale
-        let maxZoomScale = scrollView.maximumZoomScale
-        view.layoutIfNeeded()
-        let visibleRectSize = scrollView.bounds.size
-        let imageSize = image.size
-        let hScale = visibleRectSize.width / imageSize.width
-        let vScale = visibleRectSize.height / imageSize.height
-        let scale = min(maxZoomScale, max(minZoomScale, min(hScale, vScale)))
-        scrollView.setZoomScale(scale, animated: false)
         scrollView.layoutIfNeeded()
-        let newContentSize = scrollView.contentSize
-        let x = (newContentSize.width - visibleRectSize.width) / 2
-        let y = (newContentSize.height - visibleRectSize.height) / 2
-        scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+        
+        let visibleSize = scrollView.bounds.size
+        let imageSize = image.size
+
+        let hScale = visibleSize.width / imageSize.width
+        let vScale = visibleSize.height / imageSize.height
+
+        let scale = max(hScale, vScale) // 💥 Ключевой момент — делаем aspectFill поведение
+
+        scrollView.minimumZoomScale = scale
+        scrollView.zoomScale = scale
+
+        imageView.frame.size = CGSize(width: imageSize.width * scale, height: imageSize.height * scale)
+
+        // Центрирование картинки по экрану
+        let contentWidth = imageView.frame.width
+        let contentHeight = imageView.frame.height
+
+        let offsetX = max((contentWidth - visibleSize.width) / 2, 0)
+        let offsetY = max((contentHeight - visibleSize.height) / 2, 0)
+
+        scrollView.contentOffset = CGPoint(x: offsetX, y: offsetY)
     }
+
 }
 
 // MARK: - UIScrollViewDelegate
