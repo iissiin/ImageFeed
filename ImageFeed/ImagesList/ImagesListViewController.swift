@@ -63,7 +63,7 @@ class ImagesListViewController: UIViewController {
         
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(
-            with: URL(string: photo.thumbImageURL),
+            with: URL(string: photo.regularImageURL),
             placeholder: UIImage(named: "placeholder"),
             options: [.transition(.fade(0.2))], // Плавное появление
             completionHandler: { [weak self] result in

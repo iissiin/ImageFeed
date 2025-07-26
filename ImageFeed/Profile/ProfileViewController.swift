@@ -112,7 +112,7 @@ final class ProfileViewController: UIViewController {
             preferredStyle: .alert
         )
 
-        alert.addAction(UIAlertAction(title: "Да", style: .destructive) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             self?.logout()
         })
         

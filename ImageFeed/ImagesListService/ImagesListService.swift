@@ -104,6 +104,7 @@ final class ImagesListService {
                         welcomeDescription: photo.welcomeDescription,
                         thumbImageURL: photo.thumbImageURL,
                         largeImageURL: photo.largeImageURL,
+                        regularImageURL: photo.regularImageURL,
                         isLiked: !photo.isLiked
                     )
                     self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
@@ -133,6 +134,7 @@ struct Photo {
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
+    let regularImageURL: String
     var isLiked: Bool
 }
 
@@ -147,6 +149,7 @@ extension Photo {
         self.welcomeDescription = result.description
         self.thumbImageURL = result.urls.thumb
         self.largeImageURL = result.urls.full
+        self.regularImageURL = result.urls.regular
         self.isLiked = result.likedByUser
     }
 }
