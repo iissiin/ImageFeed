@@ -27,7 +27,9 @@ final class AuthViewController: UIViewController {
             }
             webViewVC.delegate = self
             
-            
+            let presenter = WebViewPresenter()
+            webViewVC.presenter = presenter
+            presenter.view = webViewVC
         }
     }
 

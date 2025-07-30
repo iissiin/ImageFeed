@@ -113,4 +113,8 @@ final class AuthHelper {
 
         return request
     }
+    
+    func authRequest() -> URLRequest? {
+        WebViewRequestHelper.makeAuthRequest(from: AuthConfiguration.standard)
+    }
 }
