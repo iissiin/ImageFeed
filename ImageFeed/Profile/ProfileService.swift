@@ -1,7 +1,14 @@
 import Foundation
 import UIKit
 
-final class ProfileService {
+protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void)
+    func clean()
+    func setProfileForTesting(_ profile: Profile)
+}
+
+final class ProfileService: ProfileServiceProtocol {
     private var task: URLSessionTask?
     private var lastToken: String?
     
@@ -9,6 +16,10 @@ final class ProfileService {
     private init() {}
     
     private(set) var profile: Profile?
+    
+    func setProfileForTesting(_ profile: Profile) {
+            self.profile = profile
+    }
     
     func clean() {
         profile = nil

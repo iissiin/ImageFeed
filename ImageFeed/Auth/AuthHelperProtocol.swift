@@ -18,7 +18,7 @@ final class AuthHelper: AuthHelperProtocol {
         return URLRequest(url: url)
     }
 
-    private func authURL() -> URL? {
+    func authURL() -> URL? {
         guard var components = URLComponents(string: configuration.authURLString) else {
             return nil
         }
