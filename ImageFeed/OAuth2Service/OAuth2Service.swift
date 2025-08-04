@@ -8,7 +8,7 @@ final class OAuth2Service {
 
     private var task: URLSessionTask?
     private var lastCode: String?
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
 
     func fetchOAuthToken(
         _ code: String,
