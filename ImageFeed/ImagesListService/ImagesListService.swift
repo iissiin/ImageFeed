@@ -65,71 +65,63 @@ final class ImagesListService {
     
     // MARK: - Like/Unlike
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
-            print(" Запрос на \(isLike ? "лайк" : "дизлайк") фото с ID: \(photoId)")
-            
-            let urlString = "https://api.unsplash.com/photos/\(photoId)/like"
-            guard let url = URL(string: urlString) else {
-                completion(.failure(NSError(domain: "Invalid URL", code: 0)))
-                return
-            }
-
-            guard let token = OAuth2TokenStorage.shared.token else {
-                completion(.failure(NSError(domain: "No token", code: 401)))
-                return
-            }
-            
-            print("Токен: \(token)")
-
-            var request = URLRequest(url: url)
-            request.httpMethod = isLike ? "POST" : "DELETE"
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-            let task = self.session.dataTask(with: request) { [weak self] data, response, error in
-                guard let self = self else { return }
-
-                if let error = error {
-                    print("Ошибка при отправке \(isLike ? "POST" : "DELETE"): \(error)")
-                    completion(.failure(error))
-                    return
-                }
-
-                if let httpResponse = response as? HTTPURLResponse {
-                    print("Ответ сервера: \(httpResponse.statusCode)")
-
-                    guard (200...299).contains(httpResponse.statusCode) else {
-                        completion(.failure(NSError(domain: "Server error", code: httpResponse.statusCode)))
-                        return
-                    }
-                }
-
-                DispatchQueue.main.async {
-                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                        let photo = self.photos[index]
-                        let newPhoto = Photo(
-                            id: photo.id,
-                            size: photo.size,
-                            createdAt: photo.createdAt,
-                            welcomeDescription: photo.welcomeDescription,
-                            thumbImageURL: photo.thumbImageURL,
-                            largeImageURL: photo.largeImageURL,
-                            regularImageURL: photo.regularImageURL,
-                            isLiked: !photo.isLiked
-                        )
-                        self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
-
-                        NotificationCenter.default.post(
-                            name: ImagesListService.didChangeNotification,
-                            object: self,
-                            userInfo: ["photos": self.photos]
-                        )
-                    }
-
-                    completion(.success(()))
-                }
-            }
-
-            task.resume()
+        let urlString = "https://api.unsplash.com/photos/\(photoId)/like"
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NSError(domain: "Invalid URL", code: 0)))
+            return
         }
+
+        guard let token = OAuth2TokenStorage.shared.token else {
+            completion(.failure(NSError(domain: "No token", code: 401)))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let task = self.session.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                completion(.failure(NSError(domain: "Server error", code: 0)))
+                return
+            }
+
+            DispatchQueue.main.async {
+                if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                    let photo = self.photos[index]
+                    let newPhoto = Photo(
+                        id: photo.id,
+                        size: photo.size,
+                        createdAt: photo.createdAt,
+                        welcomeDescription: photo.welcomeDescription,
+                        thumbImageURL: photo.thumbImageURL,
+                        largeImageURL: photo.largeImageURL,
+                        regularImageURL: photo.regularImageURL,
+                        isLiked: !photo.isLiked
+                    )
+                    self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
+                    
+                    NotificationCenter.default.post(
+                        name: ImagesListService.didChangeNotification,
+                        object: self,
+                        userInfo: ["photos": self.photos]
+                    )
+                }
+
+                completion(.success(()))
+            }
+        }
+
+        task.resume()
+    }
 
 }
 
