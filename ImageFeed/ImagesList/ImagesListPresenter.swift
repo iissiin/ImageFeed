@@ -1,9 +1,9 @@
 import Foundation
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
-    private weak var view: ImagesListViewProtocol?
+    weak var view: ImagesListViewProtocol?
     private let imagesListService = ImagesListService.shared
-
+    
     init(view: ImagesListViewProtocol) {
         self.view = view
     }
@@ -19,25 +19,33 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     func viewDidLoad() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(didChangePhotos),
+            selector: #selector(handleDidChangePhotosNotification),
             name: ImagesListService.didChangeNotification,
             object: nil
         )
         imagesListService.fetchPhotosNextPage()
     }
+    
+    @objc private func handleDidChangePhotosNotification(_ notification: Notification) {
+        guard let newPhotos = notification.userInfo?["photos"] as? [Photo] else { return }
+        didChangePhotos(newPhotos)
+    }
 
-    @objc private func didChangePhotos() {
+    func didChangePhotos(_ newPhotos: [Photo]) {
         guard let view = view else { return }
 
-        let newPhotos = imagesListService.photos
         let oldCount = view.getPhotos().count
         let newCount = newPhotos.count
 
-        guard newCount > oldCount else { return }
-
         let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
-        view.setPhotos(newPhotos)
-        view.insertRows(at: indexPaths)
+
+        DispatchQueue.main.async {
+            print("✅ before setPhotos: old = \(view.getPhotos().count), new = \(newPhotos.count)")
+            
+            view.setPhotos(newPhotos)
+
+            view.insertRows(at: indexPaths)
+        }
     }
 
     func willDisplayCell(at indexPath: IndexPath) {
@@ -47,7 +55,6 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     }
 
     func didSelectCell(at indexPath: IndexPath) {
-        // логика останется в контроллере, только selectedIndexPath хранится
     }
 
     func didTapLike(at indexPath: IndexPath) {
@@ -59,13 +66,13 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
             guard let self = self else { return }
             let newLikeStatus = !photo.isLiked
 
-            let success = true // здесь будет реальный запрос
+            let success = true
 
             DispatchQueue.main.async {
                 UIBlockingProgressHUD.dismiss()
                 if success {
                     photo.isLiked = newLikeStatus
-                    var updatedPhotos = self.imagesListService.photos
+                    var updatedPhotos = self.view?.getPhotos() ?? []
                     updatedPhotos[indexPath.row] = photo
                     self.view?.setPhotos(updatedPhotos)
                     self.view?.updateLikeStatus(at: indexPath, isLiked: newLikeStatus)
@@ -73,4 +80,5 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
             }
         }
     }
+
 }
