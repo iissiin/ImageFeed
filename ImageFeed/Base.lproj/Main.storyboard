@@ -149,6 +149,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cco-vc-KWK" customClass="didTapBackButton">
                                 <rect key="frame" x="8" y="8" width="48" height="48"/>
+                                <accessibility key="accessibilityConfiguration" identifier="nav back button white"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="09T-Ae-rao"/>
                                     <constraint firstAttribute="height" constant="48" id="G8k-Bi-3AF"/>
@@ -187,6 +188,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="clt-GB-6QY"/>
                     <connections>
+                        <outlet property="backButton" destination="cco-vc-KWK" id="uH3-Eu-EcM"/>
                         <outlet property="imageView" destination="SU5-Ti-raH" id="JR9-ni-9bS"/>
                         <outlet property="scrollView" destination="Xgz-UR-XUg" id="mX0-eL-Rxl"/>
                     </connections>

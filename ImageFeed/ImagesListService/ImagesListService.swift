@@ -23,6 +23,10 @@ final class ImagesListService {
 
     // MARK: - Fetch Photos
     func fetchPhotosNextPage() {
+        if ProcessInfo.processInfo.arguments.contains("UITEST"),
+           lastLoadedPage >= 2 { return }
+
+        
         guard task == nil else { return }
 
         let nextPage = lastLoadedPage + 1

@@ -8,6 +8,7 @@ final class SingleImageViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var backButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,6 +17,7 @@ final class SingleImageViewController: UIViewController {
         scrollView.maximumZoomScale = 1.25
         
         imageView.translatesAutoresizingMaskIntoConstraints = true
+        backButton.accessibilityIdentifier = "BackButton"
     }
         
     override func viewWillAppear(_ animated: Bool) {

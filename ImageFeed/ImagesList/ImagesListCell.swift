@@ -13,6 +13,13 @@ final class ImagesListCell: UITableViewCell {
         delegate?.imageListCellDidTapLike(self)
     }
     
+    override func awakeFromNib() {        
+        super.awakeFromNib()
+            
+        // Добавляем accessibilityIdentifier
+        likeButton.accessibilityIdentifier = "LikeButton"
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         cellImage.kf.cancelDownloadTask()

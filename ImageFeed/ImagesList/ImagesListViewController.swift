@@ -116,8 +116,6 @@ extension ImagesListViewController: UITableViewDataSource {
         configCell(for: imagesListCell, with: indexPath)
         imagesListCell.delegate = self
         
-        imagesListCell.accessibilityIdentifier = "ImageCell_\(indexPath.row)"
-
         return imagesListCell
     }
 }

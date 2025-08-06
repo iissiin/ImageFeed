@@ -62,27 +62,27 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     }
 
     func didTapLike(at indexPath: IndexPath) {
-        guard var photo = try? view?.getPhotos()[indexPath.row] else { return }
+            guard var photo = try? view?.getPhotos()[indexPath.row] else { return }
 
-        UIBlockingProgressHUD.show()
+            UIBlockingProgressHUD.show()
 
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else { return }
-            let newLikeStatus = !photo.isLiked
+            DispatchQueue.global().async { [weak self] in
+                guard let self = self else { return }
+                let newLikeStatus = !photo.isLiked
 
-            let success = true
+                let success = true
 
-            DispatchQueue.main.async {
-                UIBlockingProgressHUD.dismiss()
-                if success {
-                    photo.isLiked = newLikeStatus
-                    var updatedPhotos = self.view?.getPhotos() ?? []
-                    updatedPhotos[indexPath.row] = photo
-                    self.view?.setPhotos(updatedPhotos)
-                    self.view?.updateLikeStatus(at: indexPath, isLiked: newLikeStatus)
+                DispatchQueue.main.async {
+                    UIBlockingProgressHUD.dismiss()
+                    if success {
+                        photo.isLiked = newLikeStatus
+                        var updatedPhotos = self.view?.getPhotos() ?? []
+                        updatedPhotos[indexPath.row] = photo
+                        self.view?.setPhotos(updatedPhotos)
+                        self.view?.updateLikeStatus(at: indexPath, isLiked: newLikeStatus)
+                    }
                 }
             }
         }
-    }
 
 }
