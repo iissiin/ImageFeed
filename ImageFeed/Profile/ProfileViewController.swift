@@ -143,6 +143,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     private func setupLogoutButton() {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "logout_button"), for: .normal)
+        button.accessibilityIdentifier = "LogoutButton"
         button.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
 

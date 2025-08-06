@@ -33,6 +33,8 @@ class ImagesListViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        
+        tableView.accessibilityIdentifier = "ImagesListTableView"
     }
 
     private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
@@ -113,6 +115,8 @@ extension ImagesListViewController: UITableViewDataSource {
 
         configCell(for: imagesListCell, with: indexPath)
         imagesListCell.delegate = self
+        
+        imagesListCell.accessibilityIdentifier = "ImageCell_\(indexPath.row)"
 
         return imagesListCell
     }
@@ -129,9 +133,16 @@ extension ImagesListViewController: ImagesListCellDelegate {
 // MARK: - ImagesListViewProtocol
 extension ImagesListViewController: ImagesListViewProtocol {
     func insertRows(at indexPaths: [IndexPath]) {
-        tableView.performBatchUpdates {
-            tableView.insertRows(at: indexPaths, with: .automatic)
-        }
+        guard !indexPaths.isEmpty else { return }
+        
+        let currentCount = tableView.numberOfRows(inSection: 0)
+        let newCount = photos.count
+        
+        let validIndexPaths = indexPaths.filter { $0.row >= currentCount && $0.row < newCount }
+        
+        tableView.performBatchUpdates({
+            tableView.insertRows(at: validIndexPaths, with: .automatic)
+        }, completion: nil)
     }
 
 
@@ -150,6 +161,7 @@ extension ImagesListViewController: ImagesListViewProtocol {
 
     func setPhotos(_ photos: [Photo]) {
         self.photos = photos
+        tableView.reloadData()
     }
 
     func getPhotos() -> [Photo] {

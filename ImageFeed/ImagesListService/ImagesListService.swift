@@ -41,9 +41,13 @@ final class ImagesListService {
                 do {
                     let photoResults = try self.decoder.decode([PhotoResult].self, from: data)
                     let newPhotos = photoResults.map { Photo(from: $0) }
+                    
+                    let uniqueNewPhotos = newPhotos.filter { newPhoto in
+                        !self.photos.contains { $0.id == newPhoto.id }
+                    }
 
                     DispatchQueue.main.async {
-                        self.photos += newPhotos
+                        self.photos += uniqueNewPhotos
                         self.lastLoadedPage = nextPage
 
                         NotificationCenter.default.post(

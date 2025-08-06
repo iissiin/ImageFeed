@@ -36,15 +36,19 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
 
         let oldCount = view.getPhotos().count
         let newCount = newPhotos.count
-
+        
+        guard newCount > oldCount else { return }
+        
         let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
 
         DispatchQueue.main.async {
-            print("✅ before setPhotos: old = \(view.getPhotos().count), new = \(newPhotos.count)")
-            
             view.setPhotos(newPhotos)
-
-            view.insertRows(at: indexPaths)
+            
+            if newCount == view.getPhotos().count {
+                view.insertRows(at: indexPaths)
+            } else {
+                view.reloadRows(at: (0..<newCount).map { IndexPath(row: $0, section: 0) })
+            }
         }
     }
 

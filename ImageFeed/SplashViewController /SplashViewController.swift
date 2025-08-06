@@ -49,14 +49,13 @@ final class SplashViewController: UIViewController {
     }
 
     private func switchToTabBarController() {
-        guard let window = UIApplication.shared.windows.first else {
-            print("ошибка")
-            return
+        DispatchQueue.main.async {
+            guard let window = UIApplication.shared.windows.first else { return }
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarViewController")
+            window.rootViewController = tabBarController
+            window.makeKeyAndVisible()
         }
-
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
-        window.rootViewController = tabBarController
     }
 
     private func presentAuthViewController() {
