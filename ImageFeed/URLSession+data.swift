@@ -16,6 +16,14 @@ enum ProfileServiceError: Error {
     case duplicateRequest
 }
 
+extension Array {
+    func withReplaced(itemAt index: Int, newValue: Element) -> [Element] {
+        var newArray = self
+        newArray[index] = newValue
+        return newArray
+    }
+}
+
 
 extension URLSession {
     func data(

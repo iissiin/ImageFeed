@@ -1,7 +1,13 @@
 import Foundation
 import UIKit
 
-final class ProfileImageService {
+protocol ProfileImageServiceProtocol {
+    var avatarURL: String? { get }
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void)
+    func clean()
+}
+
+final class ProfileImageService: ProfileImageServiceProtocol {
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
     private init() {}
@@ -10,6 +16,10 @@ final class ProfileImageService {
     private var lastUsername: String?
 
     private(set) var avatarURL: String?
+    
+    func clean() {
+            avatarURL = nil
+    }
 
     func fetchProfileImageURL(
         username: String,

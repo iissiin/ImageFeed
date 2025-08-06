@@ -27,7 +27,10 @@ final class AuthViewController: UIViewController {
             }
             webViewVC.delegate = self
             
-            
+            let authHelper = AuthHelper()
+            let presenter = WebViewPresenter(authHelper: authHelper)
+            webViewVC.presenter = presenter
+            presenter.view = webViewVC
         }
     }
 
@@ -69,7 +72,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
 extension AuthViewController {
     func showLoginErrorAlert() {
         let alert = UIAlertController(
-            title: "Что-то пошло не так(",
+            title: "",
             message: "Не удалось войти в систему",
             preferredStyle: .alert
         )

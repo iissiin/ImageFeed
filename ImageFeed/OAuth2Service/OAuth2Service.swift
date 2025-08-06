@@ -8,7 +8,7 @@ final class OAuth2Service {
 
     private var task: URLSessionTask?
     private var lastCode: String?
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
 
     func fetchOAuthToken(
         _ code: String,
@@ -26,7 +26,7 @@ final class OAuth2Service {
         task?.cancel()
         lastCode = code
 
-        guard let request = AuthHelper.shared.makeAuthTokenRequest(with: code) else {
+        guard let request = makeAuthTokenRequest(with: code) else {
             DispatchQueue.main.async {
                 completion(.failure(NetworkError.urlSessionError))
             }
@@ -59,8 +59,31 @@ final class OAuth2Service {
         task?.resume()
     }
 
+    private func makeAuthTokenRequest(with code: String) -> URLRequest? {
+        let urlString = "https://unsplash.com/oauth/token"
+        guard let url = URL(string: urlString) else { return nil }
 
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+
+        let parameters = [
+            "client_id": Constants.accessKey,
+            "client_secret": Constants.secretKey,
+            "redirect_uri": Constants.redirectURI,
+            "code": code,
+            "grant_type": "authorization_code"
+        ]
+
+        request.httpBody = parameters
+            .map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
+            .joined(separator: "&")
+            .data(using: .utf8)
+
+        return request
+    }
 }
+
 
 // MARK: - OAuth2TokenStorage
 
@@ -86,36 +109,14 @@ final class OAuth2TokenStorage {
             }
         }
     }
-}
-
-
-// MARK: - AuthHelper
-
-final class AuthHelper {
-    static let shared = AuthHelper()
-
-    private init() {}
-
-    func makeAuthTokenRequest(with code: String) -> URLRequest? {
-        let components = URLComponents(string: "https://unsplash.com/oauth/token")
-        let parameters = [
-            "client_id": Constants.accessKey,
-            "client_secret": Constants.secretKey,
-            "redirect_uri": Constants.redirectURI,
-            "code": code,
-            "grant_type": "authorization_code"
-        ]
-
-        guard let url = components?.url else { return nil }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.httpBody = parameters
-            .map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
-            .joined(separator: "&")
-            .data(using: .utf8)
-
-        return request
+    
+    func removeToken() {
+        let removed = KeychainWrapper.standard.removeObject(forKey: tokenKey)
+        if !removed {
+            print("Ошибка при удалении токена")
+        }
     }
 }
+
+
+
